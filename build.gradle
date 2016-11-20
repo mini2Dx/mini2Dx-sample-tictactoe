@@ -1,0 +1,136 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://mini2dx.org/maven/content/repositories/thirdparty/" }
+        maven { url "https://mini2dx.org/maven/content/repositories/releases/" }
+    }
+    dependencies {
+        classpath 'org.mini2Dx:parcl:1.0.10'
+        classpath 'org.mini2Dx:butler:1.0.1'
+        classpath 'com.android.tools.build:gradle:2.1.3'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0'
+    }
+}
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+
+    version = '1.0.0'
+    ext {
+        appName = 'mini2Dx-sample-tictactoe'
+        mini2DxVersion = '1.3.0'
+        gdxVersion = '1.9.4'
+        roboVMVersion = '2.2.0'
+        minibusVersion = '1.1.0'
+        miniscriptVersion = '1.0.0-beta1'
+        box2DLightsVersion = '1.4'
+        ashleyVersion = '1.7.0'
+        aiVersion = '1.8.0'
+        androidBsfVersion = '3.1.3'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://mini2dx.org/maven/content/repositories/thirdparty/" }
+        maven { url "https://mini2dx.org/maven/content/repositories/releases/" }
+    }
+}
+
+project(":core") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile "org.mini2Dx:mini2Dx-core:$mini2DxVersion"
+    }
+}
+
+project(":desktop") {
+    apply plugin: "java"
+    apply plugin: "application"
+    apply plugin: "org.mini2Dx.parcl"
+    apply plugin: "org.mini2Dx.butler"
+
+
+    dependencies {
+        compile project(":core")
+        compile "org.mini2Dx:mini2Dx-desktop:$mini2DxVersion"
+    }
+    parcl {
+        exe {
+            vmArgs = ["-Xmx1g"]
+            exeName = "mini2Dx-sample-tictactoe"
+        }
+        app {
+            vmArgs = ["-Xmx1g"]
+            appName = "mini2Dx-sample-tictactoe"
+            icon = "icon.icns"
+            applicationCategory = "public.app-category.adventure-games"
+            displayName = "mini2Dx-sample-tictactoe"
+            identifier = "mini2Dx-sample-tictactoe"
+            copyright = "Copyright 2016 Your Company Name"
+        }
+        linux {
+            vmArgs = ["-Xmx1g"]
+            binName = "mini2Dx-sample-tictactoe"
+        }
+    }
+    butler {
+        user = "your-itchio-user"
+        game = "mini2Dx-sample-tictactoe"
+        windows {
+            binDirectory = "$buildDir/windows"
+        }
+        osx {
+            binDirectory = "$buildDir/mac"
+        }
+        linux {
+            binDirectory = "$buildDir/linux"
+        }
+    }
+}
+
+project(":android") {
+    apply plugin: "android"
+
+    configurations { natives }
+
+    dependencies {
+        compile project(":core")
+        compile "org.mini2Dx:mini2Dx-android:$mini2DxVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
+        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
+    }
+}
+
+project(":ios") {
+    apply plugin: "java"
+    apply plugin: "robovm"
+
+
+    dependencies {
+        compile project(":core")
+        compile "org.mini2Dx:mini2Dx-ios:$mini2DxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+    }
+}
+
+tasks.eclipse.doLast {
+    delete ".project"
+}

@@ -1,0 +1,2 @@
+include 'core', 'desktop', 'android', 'ios'
+rootProject.name = 'mini2Dx-sample-tictactoe'
