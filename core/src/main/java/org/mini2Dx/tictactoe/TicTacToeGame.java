@@ -258,7 +258,7 @@ public class TicTacToeGame extends BasicGame {
 		if (board[0][0] == search && board[1][1] == search && board[2][2] == search) {
 			return true;
 		}
-		if (board[0][0] == search && board[1][1] == search && board[2][2] == search) {
+		if (board[0][2] == search && board[1][1] == search && board[2][0] == search) {
 			return true;
 		}
 		return false;
